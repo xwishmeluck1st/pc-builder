@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechVault | PC Builder & Tech Rentals</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <!-- Header / Navigation -->
+  <header class="bg-slate-800/80 backdrop-blur border-b border-slate-700 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-microchip text-indigo-400 text-2xl"></i>
+        <span class="text-xl font-bold tracking-tight">TechVault</span>
+      </div>
+      <nav class="flex gap-2">
+        <button id="tab-builder" onclick="switchTab('builder')" class="px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white transition">PC Builder</button>
+        <button id="tab-rentals" onclick="switchTab('rentals')" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-700 transition">Tech Rentals</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
+
+    <!-- ==================== PC BUILDER SECTION ==================== -->
+    <section id="section-builder" class="space-y-6">
+      <div class="text-center max-w-xl mx-auto mb-8">
+        <h1 class="text-3xl font-extrabold text-white">Custom PC Part Builder</h1>
+        <p class="text-slate-400 text-sm mt-2">Select your components to calculate wattage, compare prices, and order via Shopee.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Component Selectors -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 shadow-lg space-y-4">
+            
+            <!-- CPU Select -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Processor (CPU)</label>
+              <select id="select-cpu" onchange="updateBuild()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-indigo-500 focus:outline-none"></select>
+            </div>
+
+            <!-- GPU Select -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Graphics Card (GPU)</label>
+              <select id="select-gpu" onchange="updateBuild()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-indigo-500 focus:outline-none"></select>
+            </div>
+
+            <!-- RAM Select -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Memory (RAM)</label>
+              <select id="select-ram" onchange="updateBuild()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-indigo-500 focus:outline-none"></select>
+            </div>
+
+            <!-- Motherboard Select -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Motherboard</label>
+              <select id="select-mobo" onchange="updateBuild()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-indigo-500 focus:outline-none"></select>
+            </div>
+
+            <!-- Storage Select -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Storage (SSD / NVMe)</label>
+              <select id="select-storage" onchange="updateBuild()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-indigo-500 focus:outline-none"></select>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Build Summary & Shopee Affiliate Checkout -->
+        <div class="space-y-4">
+          <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg space-y-5 sticky top-20">
+            <h2 class="text-lg font-bold border-b border-slate-700 pb-3">Build Overview</h2>
+            
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-slate-400">Estimated Wattage:</span>
+              <span id="total-wattage" class="font-bold text-indigo-400">0 W</span>
+            </div>
+
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-slate-400">Estimated Total:</span>
+              <span id="total-price" class="text-2xl font-extrabold text-emerald-400">₱0.00</span>
+            </div>
+
+            <div class="border-t border-slate-700 pt-4 space-y-2">
+              <p class="text-xs text-slate-400 font-medium">Shopee Direct Purchase Links:</p>
+              <div id="affiliate-links-container" class="space-y-2">
+                <!-- Dynamically injected buy links -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TECH RENTALS SECTION ==================== -->
+    <section id="section-rentals" class="hidden space-y-8">
+      <div class="text-center max-w-xl mx-auto mb-8">
+        <h1 class="text-3xl font-extrabold text-white">Tech & Gear Rentals</h1>
+        <p class="text-slate-400 text-sm mt-2">Rent high-performance setups, VR headsets, and streaming rigs by the day or week.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Rental Card 1 -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="h-40 bg-slate-900 rounded-lg mb-4 flex items-center justify-center border border-slate-700/50">
+              <i class="fa-solid fa-gamepad text-indigo-400 text-4xl"></i>
+            </div>
+            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded font-semibold">Available</span>
+            <h3 class="text-lg font-bold mt-2">Esports Gaming Rig</h3>
+            <p class="text-xs text-slate-400 mt-1">RTX 4070 | Ryzen 7 7700X | 32GB RAM | 240Hz Monitor Included</p>
+            <p class="text-xl font-bold text-emerald-400 mt-3">₱1,200 <span class="text-xs text-slate-400">/ day</span></p>
+          </div>
+          <button onclick="openBooking('Esports Gaming Rig')" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-lg font-semibold text-sm transition">Reserve Gear</button>
+        </div>
+
+        <!-- Rental Card 2 -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="h-40 bg-slate-900 rounded-lg mb-4 flex items-center justify-center border border-slate-700/50">
+              <i class="fa-solid fa-vr-cardboard text-indigo-400 text-4xl"></i>
+            </div>
+            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded font-semibold">Available</span>
+            <h3 class="text-lg font-bold mt-2">Meta Quest 3 VR Kit</h3>
+            <p class="text-xs text-slate-400 mt-1">512GB Standalone Headset + Elite Strap + Carrying Case</p>
+            <p class="text-xl font-bold text-emerald-400 mt-3">₱800 <span class="text-xs text-slate-400">/ day</span></p>
+          </div>
+          <button onclick="openBooking('Meta Quest 3 VR Kit')" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-lg font-semibold text-sm transition">Reserve Gear</button>
+        </div>
+
+        <!-- Rental Card 3 -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="h-40 bg-slate-900 rounded-lg mb-4 flex items-center justify-center border border-slate-700/50">
+              <i class="fa-solid fa-video text-indigo-400 text-4xl"></i>
+            </div>
+            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded font-semibold">Available</span>
+            <h3 class="text-lg font-bold mt-2">4K Streamer & Creator Kit</h3>
+            <p class="text-xs text-slate-400 mt-1">Sony ZV-E10 Camera + Elgato Cam Link 4K + Ring Light</p>
+            <p class="text-xl font-bold text-emerald-400 mt-3">₱1,000 <span class="text-xs text-slate-400">/ day</span></p>
+          </div>
+          <button onclick="openBooking('4K Streamer & Creator Kit')" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-lg font-semibold text-sm transition">Reserve Gear</button>
+        </div>
+
+      </div>
+
+      <!-- Booking / Inquiry Modal Placeholder -->
+      <div id="booking-box" class="hidden bg-slate-800 border border-slate-700 rounded-xl p-6 max-w-lg mx-auto">
+        <h3 class="text-lg font-bold mb-3">Reserve: <span id="selected-item" class="text-indigo-400"></span></h3>
+        <p class="text-xs text-slate-400 mb-4">Connect your Google Form, Airtable, or WhatsApp booking link below.</p>
+        <a id="booking-btn" href="https://forms.google.com" target="_blank" class="block text-center bg-emerald-600 hover:bg-emerald-500 py-2.5 rounded-lg font-bold text-sm transition">Continue to Rental Agreement Form</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer with Mandatory Shopee Affiliate Disclosure -->
+  <footer class="bg-slate-800/40 border-t border-slate-800 py-6 text-center text-xs text-slate-500 space-y-1">
+    <p>© 2026 TechVault. All rights reserved.</p>
+    <p>Affiliate Disclosure: As a Shopee Affiliate, we earn from qualifying purchases made via links on this site at no extra cost to you.</p>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // Component Catalog with Shopee Affiliate URLs
+    const partsData = {
+      cpu: [
+        { id: "none", name: "-- Select CPU --", price: 0, watts: 0, url: "#" },
+        { id: "r5-5600", name: "AMD Ryzen 5 5600", price: 6500, watts: 65, url: "https://shope.ee/YOUR_LINK_1" },
+        { id: "i5-13400f", name: "Intel Core i5-13400F", price: 11200, watts: 65, url: "https://shope.ee/YOUR_LINK_2" },
+        { id: "r7-7800x3d", name: "AMD Ryzen 7 7800X3D", price: 23500, watts: 120, url: "https://shope.ee/YOUR_LINK_3" }
+      ],
+      gpu: [
+        { id: "none", name: "-- Select GPU --", price: 0, watts: 0, url: "#" },
+        { id: "rtx-4060", name: "Nvidia GeForce RTX 4060 8GB", price: 18500, watts: 115, url: "https://shope.ee/YOUR_LINK_4" },
+        { id: "rx-7700xt", name: "AMD Radeon RX 7700 XT 12GB", price: 28000, watts: 245, url: "https://shope.ee/YOUR_LINK_5" },
+        { id: "rtx-4070ti", name: "Nvidia GeForce RTX 4070 Ti Super", price: 54000, watts: 285, url: "https://shope.ee/YOUR_LINK_6" }
+      ],
+      ram: [
+        { id: "none", name: "-- Select RAM --", price: 0, watts: 0, url: "#" },
+        { id: "16gb-ddr4", name: "16GB (2x8GB) DDR4 3200MHz", price: 2200, watts: 10, url: "https://shope.ee/YOUR_LINK_7" },
+        { id: "32gb-ddr5", name: "32GB (2x16GB) DDR5 6000MHz", price: 6400, watts: 15, url: "https://shope.ee/YOUR_LINK_8" }
+      ],
+      mobo: [
+        { id: "none", name: "-- Select Motherboard --", price: 0, watts: 0, url: "#" },
+        { id: "b550", name: "B550 AM4 ATX Motherboard", price: 5500, watts: 50, url: "https://shope.ee/YOUR_LINK_9" },
+        { id: "b650", name: "B650 AM5 ATX Motherboard", price: 10500, watts: 60, url: "https://shope.ee/YOUR_LINK_10" }
+      ],
+      storage: [
+        { id: "none", name: "-- Select Storage --", price: 0, watts: 0, url: "#" },
+        { id: "1tb-nvme", name: "1TB PCIe 4.0 NVMe SSD", price: 3800, watts: 10, url: "https://shope.ee/YOUR_LINK_11" },
+        { id: "2tb-nvme", name: "2TB PCIe 4.0 NVMe SSD", price: 6900, watts: 10, url: "https://shope.ee/YOUR_LINK_12" }
+      ]
+    };
+
+    // Populate Select Options
+    function populateDropdowns() {
+      ['cpu', 'gpu', 'ram', 'mobo', 'storage'].forEach(type => {
+        const select = document.getElementById(`select-${type}`);
+        partsData[type].forEach((item, index) => {
+          const opt = document.createElement('option');
+          opt.value = index;
+          opt.textContent = index === 0 ? item.name : `${item.name} (+₱${item.price.toLocaleString()})`;
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    // Recalculate Totals & Update Shopee Links
+    function updateBuild() {
+      let totalCost = 0;
+      let totalWatts = 0;
+      const linksContainer = document.getElementById('affiliate-links-container');
+      linksContainer.innerHTML = '';
+
+      ['cpu', 'gpu', 'ram', 'mobo', 'storage'].forEach(type => {
+        const select = document.getElementById(`select-${type}`);
+        const selectedItem = partsData[type][select.value];
+
+        if (selectedItem && selectedItem.price > 0) {
+          totalCost += selectedItem.price;
+          totalWatts += selectedItem.watts;
+
+          // Add Shopee buy button
+          const link = document.createElement('a');
+          link.href = selectedItem.url;
+          link.target = '_blank';
+          link.className = 'flex items-center justify-between text-xs bg-[#EE4D2D] hover:bg-[#d44122] text-white py-2 px-3 rounded-lg font-semibold transition';
+          link.innerHTML = `<span>Buy ${type.toUpperCase()} on Shopee</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>`;
+          linksContainer.appendChild(link);
+        }
+      });
+
+      document.getElementById('total-price').textContent = `₱${totalCost.toLocaleString()}`;
+      document.getElementById('total-wattage').textContent = `${totalWatts} W`;
+
+      if (linksContainer.children.length === 0) {
+        linksContainer.innerHTML = '<p class="text-xs text-slate-500 italic">Select components to generate Shopee buy buttons.</p>';
+      }
+    }
+
+    // Tab Switching
+    function switchTab(tab) {
+      const builderSection = document.getElementById('section-builder');
+      const rentalsSection = document.getElementById('section-rentals');
+      const builderTab = document.getElementById('tab-builder');
+      const rentalsTab = document.getElementById('tab-rentals');
+
+      if (tab === 'builder') {
+        builderSection.classList.remove('hidden');
+        rentalsSection.classList.add('hidden');
+        builderTab.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white transition";
+        rentalsTab.className = "px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-700 transition";
+      } else {
+        builderSection.classList.add('hidden');
+        rentalsSection.classList.remove('hidden');
+        rentalsTab.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white transition";
+        builderTab.className = "px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-700 transition";
+      }
+    }
+
+    // Open Booking Action
+    function openBooking(item) {
+      const box = document.getElementById('booking-box');
+      document.getElementById('selected-item').textContent = item;
+      box.classList.remove('hidden');
+      box.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Initialize on load
+    populateDropdowns();
+    updateBuild();
+  </script>
+</body>
+</html>
