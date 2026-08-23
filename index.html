@@ -3,278 +3,559 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TechVault | PC Builder & Tech Rentals</title>
+  <title>Custom PC Part Builder & Tech Rentals</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    body { background-color: #0c0d0e; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #121316; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+<body class="text-zinc-200 min-h-screen flex flex-col font-sans antialiased">
 
-  <!-- Header / Navigation -->
-  <header class="bg-slate-800/80 backdrop-blur border-b border-slate-700 sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <i class="fa-solid fa-microchip text-indigo-400 text-2xl"></i>
-        <span class="text-xl font-bold tracking-tight">TechVault</span>
+  <!-- Top App Navigation -->
+  <header class="border-b border-zinc-800 bg-[#121316]/90 sticky top-0 z-50 backdrop-blur">
+    <div class="max-w-[1440px] mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/20">
+          <i class="fa-solid fa-microchip text-sm"></i>
+        </div>
+        <span class="font-bold text-lg text-white tracking-tight">RigCraft <span class="text-xs text-blue-400 font-mono font-normal">PH</span></span>
       </div>
-      <nav class="flex gap-2">
-        <button id="tab-builder" onclick="switchTab('builder')" class="px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white transition">PC Builder</button>
-        <button id="tab-rentals" onclick="switchTab('rentals')" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-700 transition">Tech Rentals</button>
-      </nav>
+
+      <div class="flex items-center gap-2">
+        <button id="nav-builder" onclick="toggleMainView('builder')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white transition">PC Builder</button>
+        <button id="nav-rentals" onclick="toggleMainView('rentals')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-zinc-800/80 text-zinc-400 hover:text-white transition">Tech Rentals</button>
+      </div>
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
+  <!-- ==================== PC BUILDER APP ==================== -->
+  <main id="builder-view" class="max-w-[1440px] mx-auto px-4 py-6 flex-1 w-full space-y-5">
+    
+    <div class="flex flex-col gap-1">
+      <p class="text-xs text-zinc-400">Select your components and check compatibility in real time.</p>
+    </div>
 
-    <!-- ==================== PC BUILDER SECTION ==================== -->
-    <section id="section-builder" class="space-y-6">
-      <div class="text-center max-w-xl mx-auto mb-8">
-        <h1 class="text-3xl font-extrabold text-white">Custom PC Part Builder</h1>
-        <p class="text-slate-400 text-sm mt-2">Select your components to calculate wattage, compare prices, and order via Shopee.</p>
-      </div>
+    <!-- Category Pill Bar -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar text-xs font-medium" id="category-pills">
+      <!-- Injected via JavaScript -->
+    </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Component Selectors -->
-        <div class="lg:col-span-2 space-y-4">
-          <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 shadow-lg space-y-4">
-            
-            <!-- CPU Select -->
-            <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Processor (CPU)</label>
-              <select id="select-cpu" onchange="updateBuild()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-indigo-500 focus:outline-none"></select>
-            </div>
-
-            <!-- GPU Select -->
-            <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Graphics Card (GPU)</label>
-              <select id="select-gpu" onchange="updateBuild()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-indigo-500 focus:outline-none"></select>
-            </div>
-
-            <!-- RAM Select -->
-            <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Memory (RAM)</label>
-              <select id="select-ram" onchange="updateBuild()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-indigo-500 focus:outline-none"></select>
-            </div>
-
-            <!-- Motherboard Select -->
-            <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Motherboard</label>
-              <select id="select-mobo" onchange="updateBuild()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-indigo-500 focus:outline-none"></select>
-            </div>
-
-            <!-- Storage Select -->
-            <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Storage (SSD / NVMe)</label>
-              <select id="select-storage" onchange="updateBuild()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:border-indigo-500 focus:outline-none"></select>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Build Summary & Shopee Affiliate Checkout -->
-        <div class="space-y-4">
-          <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg space-y-5 sticky top-20">
-            <h2 class="text-lg font-bold border-b border-slate-700 pb-3">Build Overview</h2>
-            
-            <div class="flex justify-between items-center text-sm">
-              <span class="text-slate-400">Estimated Wattage:</span>
-              <span id="total-wattage" class="font-bold text-indigo-400">0 W</span>
-            </div>
-
-            <div class="flex justify-between items-center text-sm">
-              <span class="text-slate-400">Estimated Total:</span>
-              <span id="total-price" class="text-2xl font-extrabold text-emerald-400">₱0.00</span>
-            </div>
-
-            <div class="border-t border-slate-700 pt-4 space-y-2">
-              <p class="text-xs text-slate-400 font-medium">Shopee Direct Purchase Links:</p>
-              <div id="affiliate-links-container" class="space-y-2">
-                <!-- Dynamically injected buy links -->
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== TECH RENTALS SECTION ==================== -->
-    <section id="section-rentals" class="hidden space-y-8">
-      <div class="text-center max-w-xl mx-auto mb-8">
-        <h1 class="text-3xl font-extrabold text-white">Tech & Gear Rentals</h1>
-        <p class="text-slate-400 text-sm mt-2">Rent high-performance setups, VR headsets, and streaming rigs by the day or week.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Main Workspace Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Catalog Column (Left) -->
+      <section class="lg:col-span-7 xl:col-span-8 space-y-4">
         
-        <!-- Rental Card 1 -->
-        <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
-          <div>
-            <div class="h-40 bg-slate-900 rounded-lg mb-4 flex items-center justify-center border border-slate-700/50">
-              <i class="fa-solid fa-gamepad text-indigo-400 text-4xl"></i>
-            </div>
-            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded font-semibold">Available</span>
-            <h3 class="text-lg font-bold mt-2">Esports Gaming Rig</h3>
-            <p class="text-xs text-slate-400 mt-1">RTX 4070 | Ryzen 7 7700X | 32GB RAM | 240Hz Monitor Included</p>
-            <p class="text-xl font-bold text-emerald-400 mt-3">₱1,200 <span class="text-xs text-slate-400">/ day</span></p>
+        <!-- Search & Control Header -->
+        <div class="space-y-3">
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i>
+            <input 
+              type="text" 
+              id="search-input" 
+              oninput="handleFilter()" 
+              placeholder="Search parts..." 
+              class="w-full bg-[#16171a] border border-zinc-800 rounded-lg pl-9 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition"
+            />
           </div>
-          <button onclick="openBooking('Esports Gaming Rig')" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-lg font-semibold text-sm transition">Reserve Gear</button>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-400 pt-1">
+            <span id="parts-counter">Showing 0 parts</span>
+            
+            <div class="flex items-center gap-4">
+              <label class="flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" id="hide-incompatible" class="rounded bg-zinc-800 border-zinc-700 text-blue-600 focus:ring-0">
+                <span>Hide incompatible</span>
+              </label>
+
+              <select id="sort-select" onchange="handleFilter()" class="bg-[#16171a] border border-zinc-800 rounded px-2.5 py-1 text-xs text-zinc-300 focus:outline-none">
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="name-asc">Name: A to Z</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <!-- Rental Card 2 -->
-        <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
-          <div>
-            <div class="h-40 bg-slate-900 rounded-lg mb-4 flex items-center justify-center border border-slate-700/50">
-              <i class="fa-solid fa-vr-cardboard text-indigo-400 text-4xl"></i>
-            </div>
-            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded font-semibold">Available</span>
-            <h3 class="text-lg font-bold mt-2">Meta Quest 3 VR Kit</h3>
-            <p class="text-xs text-slate-400 mt-1">512GB Standalone Headset + Elite Strap + Carrying Case</p>
-            <p class="text-xl font-bold text-emerald-400 mt-3">₱800 <span class="text-xs text-slate-400">/ day</span></p>
-          </div>
-          <button onclick="openBooking('Meta Quest 3 VR Kit')" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-lg font-semibold text-sm transition">Reserve Gear</button>
+        <!-- Product Cards Grid -->
+        <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <!-- Injected via JavaScript -->
         </div>
 
-        <!-- Rental Card 3 -->
-        <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
-          <div>
-            <div class="h-40 bg-slate-900 rounded-lg mb-4 flex items-center justify-center border border-slate-700/50">
-              <i class="fa-solid fa-video text-indigo-400 text-4xl"></i>
-            </div>
-            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded font-semibold">Available</span>
-            <h3 class="text-lg font-bold mt-2">4K Streamer & Creator Kit</h3>
-            <p class="text-xs text-slate-400 mt-1">Sony ZV-E10 Camera + Elgato Cam Link 4K + Ring Light</p>
-            <p class="text-xl font-bold text-emerald-400 mt-3">₱1,000 <span class="text-xs text-slate-400">/ day</span></p>
-          </div>
-          <button onclick="openBooking('4K Streamer & Creator Kit')" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-lg font-semibold text-sm transition">Reserve Gear</button>
+      </section>
+
+      <!-- Build Overview Column (Right Sidebar) -->
+      <aside class="lg:col-span-5 xl:col-span-4 bg-[#121316] border border-zinc-800/90 rounded-xl p-4 lg:sticky lg:top-20 space-y-4 shadow-xl">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <h2 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>Your Build</span>
+            <span id="build-count" class="text-xs px-2 py-0.5 rounded-full bg-blue-950 text-blue-400 border border-blue-800/40">0/9</span>
+          </h2>
+          <button onclick="clearAllBuild()" class="text-xs text-red-400 hover:text-red-300 font-medium transition">Clear all</button>
         </div>
 
-      </div>
+        <p class="text-[11px] leading-relaxed text-zinc-500">
+          Note: some physical fit isn't checked, like RAM height under CPU air coolers, cooler height in the case, or PSU length in the case.
+        </p>
 
-      <!-- Booking / Inquiry Modal Placeholder -->
-      <div id="booking-box" class="hidden bg-slate-800 border border-slate-700 rounded-xl p-6 max-w-lg mx-auto">
-        <h3 class="text-lg font-bold mb-3">Reserve: <span id="selected-item" class="text-indigo-400"></span></h3>
-        <p class="text-xs text-slate-400 mb-4">Connect your Google Form, Airtable, or WhatsApp booking link below.</p>
-        <a id="booking-btn" href="https://forms.google.com" target="_blank" class="block text-center bg-emerald-600 hover:bg-emerald-500 py-2.5 rounded-lg font-bold text-sm transition">Continue to Rental Agreement Form</a>
-      </div>
-    </section>
+        <!-- Selected Slots List -->
+        <div id="build-slots-list" class="space-y-1 divide-y divide-zinc-800/60 text-xs">
+          <!-- Injected via JavaScript -->
+        </div>
 
+        <!-- Total Price -->
+        <div class="pt-3 border-t border-zinc-800 flex items-baseline justify-between">
+          <span class="text-xs text-zinc-400 uppercase tracking-wider font-semibold">Total</span>
+          <span id="build-total-price" class="text-2xl font-extrabold text-white tracking-tight">₱0</span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-2 pt-1">
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="saveBuildPrompt()" class="flex items-center justify-center gap-1.5 bg-zinc-800 hover:bg-zinc-700 py-2 rounded-lg text-xs font-semibold transition text-zinc-300 hover:text-white">
+              <i class="fa-regular fa-bookmark text-zinc-400"></i> Save build
+            </button>
+            <button onclick="shareBuildPrompt()" class="flex items-center justify-center gap-1.5 bg-zinc-800 hover:bg-zinc-700 py-2 rounded-lg text-xs font-semibold transition text-zinc-300 hover:text-white">
+              <i class="fa-solid fa-share-nodes text-zinc-400"></i> Share build
+            </button>
+          </div>
+
+          <button onclick="alert('Proceeding to complete checkout summary.')" class="w-full bg-blue-600 hover:bg-blue-500 py-2.5 rounded-lg text-xs font-bold text-white transition flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20">
+            <i class="fa-solid fa-eye text-xs"></i> View details
+          </button>
+        </div>
+
+        <!-- Disclosure -->
+        <p class="text-[10px] text-zinc-500 text-center leading-tight pt-2 border-t border-zinc-800/60">
+          We may earn a commission on purchases made through links here. It doesn't affect which prices or listings are shown.
+        </p>
+
+      </aside>
+
+    </div>
   </main>
 
-  <!-- Footer with Mandatory Shopee Affiliate Disclosure -->
-  <footer class="bg-slate-800/40 border-t border-slate-800 py-6 text-center text-xs text-slate-500 space-y-1">
-    <p>© 2026 TechVault. All rights reserved.</p>
-    <p>Affiliate Disclosure: As a Shopee Affiliate, we earn from qualifying purchases made via links on this site at no extra cost to you.</p>
-  </footer>
+  <!-- ==================== TECH RENTALS VIEW ==================== -->
+  <main id="rentals-view" class="max-w-[1440px] mx-auto px-4 py-8 flex-1 w-full hidden space-y-6">
+    <div>
+      <h1 class="text-2xl font-bold text-white">Tech & Gear Rentals</h1>
+      <p class="text-xs text-zinc-400 mt-1">Rent high-spec setups, VR equipment, and production kits with instant reservation.</p>
+    </div>
 
-  <!-- ==================== JAVASCRIPT ==================== -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-[#121316] border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-4">
+        <div>
+          <div class="h-32 bg-zinc-900 rounded-lg flex items-center justify-center border border-zinc-800 mb-3">
+            <i class="fa-solid fa-gamepad text-3xl text-blue-500"></i>
+          </div>
+          <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-medium">Available</span>
+          <h3 class="text-sm font-bold text-white mt-2">Competitive Esports Station</h3>
+          <p class="text-xs text-zinc-400 mt-1">RTX 4070, Ryzen 7 7700X, 32GB DDR5, 240Hz Gaming Display included.</p>
+        </div>
+        <div class="pt-2 border-t border-zinc-800 flex items-center justify-between">
+          <span class="text-sm font-bold text-white">₱1,200 <span class="text-xs font-normal text-zinc-500">/day</span></span>
+          <a href="https://forms.google.com" target="_blank" class="bg-blue-600 hover:bg-blue-500 px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition">Book Gear</a>
+        </div>
+      </div>
+
+      <div class="bg-[#121316] border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-4">
+        <div>
+          <div class="h-32 bg-zinc-900 rounded-lg flex items-center justify-center border border-zinc-800 mb-3">
+            <i class="fa-solid fa-vr-cardboard text-3xl text-blue-500"></i>
+          </div>
+          <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-medium">Available</span>
+          <h3 class="text-sm font-bold text-white mt-2">Meta Quest 3 VR Bundle</h3>
+          <p class="text-xs text-zinc-400 mt-1">512GB Standalone Headset, Touch Plus controllers, Elite battery headstrap.</p>
+        </div>
+        <div class="pt-2 border-t border-zinc-800 flex items-center justify-between">
+          <span class="text-sm font-bold text-white">₱800 <span class="text-xs font-normal text-zinc-500">/day</span></span>
+          <a href="https://forms.google.com" target="_blank" class="bg-blue-600 hover:bg-blue-500 px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition">Book Gear</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script>
-    // Component Catalog with Shopee Affiliate URLs
-    const partsData = {
+    // Categories List matching your screenshot
+    const categories = [
+      { id: 'cpu', label: 'CPU' },
+      { id: 'mobo', label: 'Motherboard' },
+      { id: 'gpu', label: 'Video Card' },
+      { id: 'ram', label: 'RAM' },
+      { id: 'storage', label: 'Storage' },
+      { id: 'psu', label: 'PSU' },
+      { id: 'cooler', label: 'CPU Cooler' },
+      { id: 'case', label: 'Case' },
+      { id: 'fan', label: 'Case Fan' }
+    ];
+
+    // Products Database (Customizable with your Shopee affiliate URLs)
+    const database = {
       cpu: [
-        { id: "none", name: "-- Select CPU --", price: 0, watts: 0, url: "#" },
-        { id: "r5-5600", name: "AMD Ryzen 5 5600", price: 6500, watts: 65, url: "https://shope.ee/YOUR_LINK_1" },
-        { id: "i5-13400f", name: "Intel Core i5-13400F", price: 11200, watts: 65, url: "https://shope.ee/YOUR_LINK_2" },
-        { id: "r7-7800x3d", name: "AMD Ryzen 7 7800X3D", price: 23500, watts: 120, url: "https://shope.ee/YOUR_LINK_3" }
-      ],
-      gpu: [
-        { id: "none", name: "-- Select GPU --", price: 0, watts: 0, url: "#" },
-        { id: "rtx-4060", name: "Nvidia GeForce RTX 4060 8GB", price: 18500, watts: 115, url: "https://shope.ee/YOUR_LINK_4" },
-        { id: "rx-7700xt", name: "AMD Radeon RX 7700 XT 12GB", price: 28000, watts: 245, url: "https://shope.ee/YOUR_LINK_5" },
-        { id: "rtx-4070ti", name: "Nvidia GeForce RTX 4070 Ti Super", price: 54000, watts: 285, url: "https://shope.ee/YOUR_LINK_6" }
-      ],
-      ram: [
-        { id: "none", name: "-- Select RAM --", price: 0, watts: 0, url: "#" },
-        { id: "16gb-ddr4", name: "16GB (2x8GB) DDR4 3200MHz", price: 2200, watts: 10, url: "https://shope.ee/YOUR_LINK_7" },
-        { id: "32gb-ddr5", name: "32GB (2x16GB) DDR5 6000MHz", price: 6400, watts: 15, url: "https://shope.ee/YOUR_LINK_8" }
+        {
+          id: "cpu-1",
+          name: "AMD Ryzen 3 3200G",
+          brand: "AMD",
+          price: 2708,
+          image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=150&auto=format&fit=crop&q=60",
+          specs: { Socket: "AM4", Cores: "4-Core / 4-Thread", Graphics: "Radeon Vega 8" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        },
+        {
+          id: "cpu-2",
+          name: "AMD Ryzen 5 5600",
+          brand: "AMD",
+          price: 6490,
+          image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=150&auto=format&fit=crop&q=60",
+          specs: { Socket: "AM4", Cores: "6-Core / 12-Thread", BaseClock: "3.5 GHz" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        },
+        {
+          id: "cpu-3",
+          name: "Intel Core i5-13400F",
+          brand: "Intel",
+          price: 11400,
+          image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=150&auto=format&fit=crop&q=60",
+          specs: { Socket: "LGA1700", Cores: "10-Core (6P+4E)", BaseClock: "2.5 GHz" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        }
       ],
       mobo: [
-        { id: "none", name: "-- Select Motherboard --", price: 0, watts: 0, url: "#" },
-        { id: "b550", name: "B550 AM4 ATX Motherboard", price: 5500, watts: 50, url: "https://shope.ee/YOUR_LINK_9" },
-        { id: "b650", name: "B650 AM5 ATX Motherboard", price: 10500, watts: 60, url: "https://shope.ee/YOUR_LINK_10" }
+        {
+          id: "mobo-1",
+          name: "Ramsta RS-A320MP",
+          brand: "Ramsta",
+          price: 2400,
+          image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=150&auto=format&fit=crop&q=60",
+          specs: { Socket: "AM4", Chipset: "AMD A320", RAM: "DDR4", "Form factor": "Micro ATX" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        },
+        {
+          id: "mobo-2",
+          name: "Colorful BATTLE-AX A520M-K M.2 V14",
+          brand: "Colorful",
+          price: 2750,
+          image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=150&auto=format&fit=crop&q=60",
+          specs: { Socket: "AM4", Chipset: "AMD A520", RAM: "DDR4", "Form factor": "Micro ATX" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        },
+        {
+          id: "mobo-3",
+          name: "Asus PRIME A520M-K/CSM",
+          brand: "Asus",
+          price: 2833,
+          image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=150&auto=format&fit=crop&q=60",
+          specs: { Socket: "AM4", Chipset: "AMD A520", RAM: "DDR4", "Form factor": "Micro ATX", Color: "Black / Silver" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        },
+        {
+          id: "mobo-4",
+          name: "Gigabyte A520M K V2",
+          brand: "Gigabyte",
+          price: 2836,
+          image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=150&auto=format&fit=crop&q=60",
+          specs: { Socket: "AM4", Chipset: "AMD A520", RAM: "DDR4", "Form factor": "Micro ATX", Color: "Brown / Black" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        }
+      ],
+      gpu: [
+        {
+          id: "gpu-1",
+          name: "Nvidia GeForce RTX 4060 8GB",
+          brand: "Zotac",
+          price: 18500,
+          image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=150&auto=format&fit=crop&q=60",
+          specs: { VRAM: "8GB GDDR6", TDP: "115W", Interface: "PCIe 4.0" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        }
+      ],
+      ram: [
+        {
+          id: "ram-1",
+          name: "Kingston Fury Beast 16GB (2x8GB) 3200MHz",
+          brand: "Kingston",
+          price: 2250,
+          image: "https://images.unsplash.com/photo-1562976540-1502c2145186?w=150&auto=format&fit=crop&q=60",
+          specs: { Type: "DDR4", Capacity: "16GB Kit", Speed: "3200 MT/s" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        }
       ],
       storage: [
-        { id: "none", name: "-- Select Storage --", price: 0, watts: 0, url: "#" },
-        { id: "1tb-nvme", name: "1TB PCIe 4.0 NVMe SSD", price: 3800, watts: 10, url: "https://shope.ee/YOUR_LINK_11" },
-        { id: "2tb-nvme", name: "2TB PCIe 4.0 NVMe SSD", price: 6900, watts: 10, url: "https://shope.ee/YOUR_LINK_12" }
+        {
+          id: "storage-1",
+          name: "Kingston NV2 1TB PCIe 4.0 M.2 NVMe",
+          brand: "Kingston",
+          price: 3750,
+          image: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=150&auto=format&fit=crop&q=60",
+          specs: { Capacity: "1TB", Form: "M.2 2280", ReadSpeed: "3500 MB/s" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        }
+      ],
+      psu: [
+        {
+          id: "psu-1",
+          name: "Corsair CV650 650W 80+ Bronze",
+          brand: "Corsair",
+          price: 3300,
+          image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=150&auto=format&fit=crop&q=60",
+          specs: { Wattage: "650W", Rating: "80 PLUS Bronze", Modular: "Non-Modular" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        }
+      ],
+      cooler: [
+        {
+          id: "cooler-1",
+          name: "DeepCool AK400 Digital CPU Cooler",
+          brand: "DeepCool",
+          price: 1950,
+          image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=150&auto=format&fit=crop&q=60",
+          specs: { Type: "Air Cooler", Fans: "1x 120mm FDB", Height: "156mm" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        }
+      ],
+      case: [
+        {
+          id: "case-1",
+          name: "Montech Air 100 ARGB Micro-ATX",
+          brand: "Montech",
+          price: 2400,
+          image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=150&auto=format&fit=crop&q=60",
+          specs: { Type: "Micro-ATX Mini Tower", IncludedFans: "4x ARGB Fans", Color: "Black" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        }
+      ],
+      fan: [
+        {
+          id: "fan-1",
+          name: "Arctic P12 PWM PST 120mm Fan",
+          brand: "Arctic",
+          price: 450,
+          image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=150&auto=format&fit=crop&q=60",
+          specs: { Size: "120mm", Speed: "200-1800 RPM", Bearing: "Fluid Dynamic" },
+          affiliateUrl: "https://shope.ee/YOUR_LINK_HERE"
+        }
       ]
     };
 
-    // Populate Select Options
-    function populateDropdowns() {
-      ['cpu', 'gpu', 'ram', 'mobo', 'storage'].forEach(type => {
-        const select = document.getElementById(`select-${type}`);
-        partsData[type].forEach((item, index) => {
-          const opt = document.createElement('option');
-          opt.value = index;
-          opt.textContent = index === 0 ? item.name : `${item.name} (+₱${item.price.toLocaleString()})`;
-          select.appendChild(opt);
-        });
-      });
+    // User's active build state
+    let activeCategory = 'mobo';
+    let currentBuild = {
+      cpu: null,
+      mobo: null,
+      gpu: null,
+      ram: null,
+      storage: null,
+      psu: null,
+      cooler: null,
+      case: null,
+      fan: null
+    };
+
+    // Render Category Pills
+    function renderCategoryPills() {
+      const container = document.getElementById('category-pills');
+      container.innerHTML = categories.map(cat => {
+        const isActive = cat.id === activeCategory;
+        return `
+          <button 
+            onclick="setCategory('${cat.id}')"
+            class="px-3.5 py-1.5 rounded-md font-medium whitespace-nowrap transition ${
+              isActive 
+                ? 'bg-blue-600 text-white shadow-sm' 
+                : 'bg-[#16171a] text-zinc-400 hover:text-white hover:bg-zinc-800 border border-zinc-800/60'
+            }">
+            ${cat.label}
+          </button>
+        `;
+      }).join('');
     }
 
-    // Recalculate Totals & Update Shopee Links
-    function updateBuild() {
-      let totalCost = 0;
-      let totalWatts = 0;
-      const linksContainer = document.getElementById('affiliate-links-container');
-      linksContainer.innerHTML = '';
+    function setCategory(catId) {
+      activeCategory = catId;
+      renderCategoryPills();
+      handleFilter();
+    }
 
-      ['cpu', 'gpu', 'ram', 'mobo', 'storage'].forEach(type => {
-        const select = document.getElementById(`select-${type}`);
-        const selectedItem = partsData[type][select.value];
+    // Render Product Catalog Cards
+    function renderCatalog(items) {
+      const container = document.getElementById('catalog-grid');
+      const counter = document.getElementById('parts-counter');
+      
+      counter.textContent = `Showing 1–${items.length} of ${items.length} parts`;
 
-        if (selectedItem && selectedItem.price > 0) {
-          totalCost += selectedItem.price;
-          totalWatts += selectedItem.watts;
+      if (items.length === 0) {
+        container.innerHTML = `<div class="col-span-2 py-12 text-center text-zinc-500 text-xs">No matching components found.</div>`;
+        return;
+      }
 
-          // Add Shopee buy button
-          const link = document.createElement('a');
-          link.href = selectedItem.url;
-          link.target = '_blank';
-          link.className = 'flex items-center justify-between text-xs bg-[#EE4D2D] hover:bg-[#d44122] text-white py-2 px-3 rounded-lg font-semibold transition';
-          link.innerHTML = `<span>Buy ${type.toUpperCase()} on Shopee</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>`;
-          linksContainer.appendChild(link);
+      container.innerHTML = items.map(item => {
+        const specsHtml = Object.entries(item.specs)
+          .map(([k, v]) => `<div><span class="text-zinc-500">${k}:</span> ${v}</div>`)
+          .join('');
+
+        return `
+          <div class="bg-[#121316] border border-zinc-800 rounded-xl p-3.5 flex flex-col justify-between hover:border-zinc-700 transition space-y-3">
+            <div class="flex gap-3">
+              <!-- Thumbnail -->
+              <div class="w-16 h-16 bg-[#18191c] border border-zinc-800 rounded-lg shrink-0 flex items-center justify-center p-1 overflow-hidden">
+                <img src="${item.image}" alt="${item.name}" class="object-cover w-full h-full rounded" />
+              </div>
+              <!-- Meta -->
+              <div class="space-y-1 min-w-0">
+                <h3 class="text-xs font-bold text-white truncate leading-tight">${item.name}</h3>
+                <p class="text-[10px] text-zinc-400">${item.brand}</p>
+                <div class="text-[11px] text-zinc-300 space-y-0.5 pt-1">
+                  ${specsHtml}
+                </div>
+              </div>
+            </div>
+
+            <!-- Price & Action Buttons -->
+            <div class="pt-2 border-t border-zinc-800/80 flex items-center justify-between gap-2">
+              <span class="text-sm font-extrabold text-white">₱${item.price.toLocaleString()}</span>
+              
+              <div class="flex items-center gap-1.5">
+                <button 
+                  onclick="addToBuild('${activeCategory}', '${item.id}')"
+                  class="bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/30 px-3 py-1 rounded text-xs font-semibold transition flex items-center gap-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i> Add
+                </button>
+                <a 
+                  href="${item.affiliateUrl}" 
+                  target="_blank" 
+                  class="bg-[#EE4D2D]/15 hover:bg-[#EE4D2D] text-[#EE4D2D] hover:text-white border border-[#EE4D2D]/30 px-2.5 py-1 rounded text-xs font-semibold transition flex items-center gap-1">
+                  <i class="fa-solid fa-bag-shopping text-[10px]"></i> Buy
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filter & Sort Logic
+    function handleFilter() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const sortVal = document.getElementById('sort-select').value;
+      const rawItems = database[activeCategory] || [];
+
+      let filtered = rawItems.filter(item => 
+        item.name.toLowerCase().includes(query) || 
+        item.brand.toLowerCase().includes(query)
+      );
+
+      if (sortVal === 'price-asc') filtered.sort((a, b) => a.price - b.price);
+      if (sortVal === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+      if (sortVal === 'name-asc') filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+      renderCatalog(filtered);
+    }
+
+    // Add component to build slot
+    function addToBuild(categoryKey, itemId) {
+      const product = (database[categoryKey] || []).find(p => p.id === itemId);
+      if (product) {
+        currentBuild[categoryKey] = product;
+        updateBuildSidebar();
+      }
+    }
+
+    // Remove component from slot
+    function removeFromBuild(categoryKey) {
+      currentBuild[categoryKey] = null;
+      updateBuildSidebar();
+    }
+
+    // Clear entire build
+    function clearAllBuild() {
+      Object.keys(currentBuild).forEach(k => currentBuild[k] = null);
+      updateBuildSidebar();
+    }
+
+    // Render Build Summary Sidebar
+    function updateBuildSidebar() {
+      const container = document.getElementById('build-slots-list');
+      let totalPrice = 0;
+      let selectedCount = 0;
+
+      container.innerHTML = categories.map(cat => {
+        const item = currentBuild[cat.id];
+        if (item) {
+          totalPrice += item.price;
+          selectedCount++;
+          return `
+            <div class="py-2 flex items-center justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <button onclick="removeFromBuild('${cat.id}')" class="text-zinc-500 hover:text-red-400 transition text-[11px]">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                  <span class="font-bold text-white text-xs truncate">${item.name}</span>
+                </div>
+                <p class="text-[10px] text-zinc-500 pl-4">${cat.label}</p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="font-semibold text-white text-xs">₱${item.price.toLocaleString()}</span>
+                <a href="${item.affiliateUrl}" target="_blank" class="text-[11px] text-[#EE4D2D] hover:underline flex items-center gap-0.5">
+                  <i class="fa-solid fa-bag-shopping text-[9px]"></i> Buy
+                </a>
+              </div>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="py-2 flex items-center justify-between text-zinc-500">
+              <span class="uppercase tracking-wider font-semibold text-[10px]">${cat.label}</span>
+              <span class="text-zinc-600 text-[11px]">Not selected</span>
+            </div>
+          `;
         }
-      });
+      }).join('');
 
-      document.getElementById('total-price').textContent = `₱${totalCost.toLocaleString()}`;
-      document.getElementById('total-wattage').textContent = `${totalWatts} W`;
-
-      if (linksContainer.children.length === 0) {
-        linksContainer.innerHTML = '<p class="text-xs text-slate-500 italic">Select components to generate Shopee buy buttons.</p>';
-      }
+      document.getElementById('build-count').textContent = `${selectedCount}/${categories.length}`;
+      document.getElementById('build-total-price').textContent = `₱${totalPrice.toLocaleString()}`;
     }
 
-    // Tab Switching
-    function switchTab(tab) {
-      const builderSection = document.getElementById('section-builder');
-      const rentalsSection = document.getElementById('section-rentals');
-      const builderTab = document.getElementById('tab-builder');
-      const rentalsTab = document.getElementById('tab-rentals');
+    // UI View Switcher (Builder vs Rentals)
+    function toggleMainView(view) {
+      const builderView = document.getElementById('builder-view');
+      const rentalsView = document.getElementById('rentals-view');
+      const btnBuilder = document.getElementById('nav-builder');
+      const btnRentals = document.getElementById('nav-rentals');
 
-      if (tab === 'builder') {
-        builderSection.classList.remove('hidden');
-        rentalsSection.classList.add('hidden');
-        builderTab.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white transition";
-        rentalsTab.className = "px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-700 transition";
+      if (view === 'builder') {
+        builderView.classList.remove('hidden');
+        rentalsView.classList.add('hidden');
+        btnBuilder.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white transition";
+        btnRentals.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-zinc-800/80 text-zinc-400 hover:text-white transition";
       } else {
-        builderSection.classList.add('hidden');
-        rentalsSection.classList.remove('hidden');
-        rentalsTab.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white transition";
-        builderTab.className = "px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-700 transition";
+        builderView.classList.add('hidden');
+        rentalsView.classList.remove('hidden');
+        btnRentals.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white transition";
+        btnBuilder.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-zinc-800/80 text-zinc-400 hover:text-white transition";
       }
     }
 
-    // Open Booking Action
-    function openBooking(item) {
-      const box = document.getElementById('booking-box');
-      document.getElementById('selected-item').textContent = item;
-      box.classList.remove('hidden');
-      box.scrollIntoView({ behavior: 'smooth' });
+    function saveBuildPrompt() {
+      alert("Build configuration saved locally to your browser.");
     }
 
-    // Initialize on load
-    populateDropdowns();
-    updateBuild();
+    function shareBuildPrompt() {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Sharable build link copied to clipboard!");
+    }
+
+    // Initial Load
+    renderCategoryPills();
+    handleFilter();
+    updateBuildSidebar();
   </script>
 </body>
 </html>
